@@ -22,7 +22,11 @@ namespace RLMAL
         /// reward_t    : the reward the agent received at tick t from the chosen slot machine
         public static double updateScore(Agent agent, double alpha, double reward_t)
         {
-            return 0;
+            int actionIndex = agent.getMachineId;
+            double oldValue = agent.getRewards[actionIndex];
+            double score = oldValue + alpha * (reward_t - oldValue);
+            Console.WriteLine(score);
+            return score;
         }
 
         /// TO DO: EXERCISE 2
@@ -33,7 +37,11 @@ namespace RLMAL
         /// random      : this object can be used to generate random numbers
         public static int optimistic(Agent agent, Random random)
         {
-            return 0;
+            double highestEstimate = agent.getRewards.Max();
+            int actionIndex = Array.IndexOf(agent.getRewards, highestEstimate);
+
+            // Why is Random a parameter? Do we need to randomly choose between multiple equal values to break ties
+            return actionIndex;
         }
 
         /// TO DO: EXERCISE 3
@@ -43,9 +51,19 @@ namespace RLMAL
         /// agent       : the agent for which the action/slot machine is selected
         /// epsilon     : the random action selection parameter
         /// random      : this object can be used to generate random numbers
-        public static int egreedy(double epsilon, Agent agent , Random random)
+        public static int egreedy(double epsilon, Agent agent, Random random)
         {
-            return 0;
+            int actionIndex = 0;
+            if (random.NextDouble() < epsilon)
+            {
+                actionIndex = random.Next(agent.getNrSlots);
+            }
+            else
+            {
+                double highestEstimate = agent.getRewards.Max();
+                actionIndex = Array.IndexOf(agent.getRewards, highestEstimate);
+            }
+            return actionIndex;
         }
 
         /// TO DO: EXERCISE 4
