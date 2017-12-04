@@ -25,7 +25,6 @@ namespace RLMAL
             int actionIndex = agent.getMachineId;
             double oldValue = agent.getRewards[actionIndex];
             double score = oldValue + alpha * (reward_t - oldValue);
-            Console.WriteLine(score);
             return score;
         }
 
@@ -77,7 +76,44 @@ namespace RLMAL
         /// random      : this object can be used to generate random numbers
         public static int softmax(double tau, Agent agent, Random random)
         {
-            return 0;
+            int actionIndex = 0;
+
+            // pa = (e^(q/tau))/sum to n (e^(q/tau))
+            double[] actionProbabilities = new double[agent.getNrSlots];
+            for (int i = 0; i < agent.getNrSlots; i++)
+            {
+                double singleActionReward = Math.Pow(Math.E, agent.getRewards[i] / tau);
+                double sumReward = 0.0;
+                for (int j = 0; j < agent.getNrSlots; j++)
+                {
+                    sumReward += Math.Pow(Math.E, agent.getRewards[j] / tau);
+                }
+                double actionProbability = singleActionReward / sumReward;
+                actionProbabilities[i] = actionProbability;
+            }
+
+            actionIndex = getRandomIndexFromSelectionWheel(actionProbabilities, random);
+            Console.WriteLine(actionIndex);
+
+            return actionIndex;
+        }
+
+        public static int getRandomIndexFromSelectionWheel(double[] probabilities, Random random)
+        {
+            double universalProbability = probabilities.Sum(probability => probability);
+
+            double randomNumber = random.NextDouble() * universalProbability;
+
+            double sum = 0;
+            for (int index = 0; index < probabilities.Length; index++)
+            {
+                if (randomNumber <= (sum = sum + probabilities[index]))
+                {
+                    return index;
+                }
+            }
+            // Default to -1, but this should never happen.
+            return -1;
         }
 
 
