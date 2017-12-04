@@ -54,10 +54,12 @@ namespace RLMAL
         public static int egreedy(double epsilon, Agent agent, Random random)
         {
             int actionIndex = 0;
+            // Choose a random machine with probability epsilon.
             if (random.NextDouble() < epsilon)
             {
                 actionIndex = random.Next(agent.getNrSlots);
             }
+            // Otherwise exploit the known highest estimate machine.
             else
             {
                 double highestEstimate = agent.getRewards.Max();
