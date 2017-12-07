@@ -110,8 +110,7 @@ namespace RLMAL
             }
 
             actionIndex = getRandomIndexFromSelectionWheel(actionProbabilities, random);
-            Console.WriteLine(actionIndex);
-
+           
             return actionIndex;
         }
 
