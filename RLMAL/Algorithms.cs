@@ -36,13 +36,32 @@ namespace RLMAL
         /// random      : this object can be used to generate random numbers
         public static int optimistic(Agent agent, Random random)
         {
-            double highestEstimate = agent.getRewards.Max();
-            int actionIndex = Array.IndexOf(agent.getRewards, highestEstimate);
+            int action = findOptimalAction(agent, random);
 
-            // Why is Random a parameter? Do we need to randomly choose between multiple equal values to break ties
-            return actionIndex;
+            return action;
         }
 
+        private static int findOptimalAction(Agent agent, Random random)
+        {
+            List<int> actionIndices = new List<int>();
+            double highestEstimate = agent.getRewards.Max();
+
+            //find all optimal actions
+            for (int index = 0; index < agent.getNrSlots; index++)
+            {
+                if (agent.getRewards[index] == highestEstimate)
+                {
+                    actionIndices.Add(index);
+                }
+            }
+
+            //choose a random action from the optimal actions. 
+            int actionIndex = random.Next(actionIndices.Count());
+            int action = actionIndices[actionIndex];
+            
+            return action;
+        }
+        
         /// TO DO: EXERCISE 3
         /// The egreedy algorithm.
         /// RETURN      : The method should return an action index (this represents the machine id).
@@ -61,8 +80,7 @@ namespace RLMAL
             // Otherwise exploit the known highest estimate machine.
             else
             {
-                double highestEstimate = agent.getRewards.Max();
-                actionIndex = Array.IndexOf(agent.getRewards, highestEstimate);
+                actionIndex = findOptimalAction(agent, random);
             }
             return actionIndex;
         }
@@ -78,7 +96,6 @@ namespace RLMAL
         {
             int actionIndex = 0;
 
-            // pa = (e^(q/tau))/sum to n (e^(q/tau))
             double[] actionProbabilities = new double[agent.getNrSlots];
             for (int i = 0; i < agent.getNrSlots; i++)
             {
