@@ -7,6 +7,7 @@
 // ===============================
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace RLMAL
@@ -36,17 +37,23 @@ namespace RLMAL
         /// random      : this object can be used to generate random numbers
         public static int optimistic(Agent agent, Random random)
         {
-            int action = findOptimalAction(agent, random);
+            int actionIndex = findOptimalAction(agent, random);
 
-            return action;
+            return actionIndex;
         }
 
+        /// Pick a random action from all found optimal actions.
+        /// Return the only possible action if only one optimal action is found.
+        /// RETURN      : The method should return an action index (this represents the machine id).
+        /// PARAMETERS
+        /// agent       : the agent for which the action/slot machine is selected
+        /// random      : this object can be used to generate random numbers
         private static int findOptimalAction(Agent agent, Random random)
         {
             List<int> actionIndices = new List<int>();
             double highestEstimate = agent.getRewards.Max();
 
-            //find all optimal actions
+            // Find all optimal actions.
             for (int index = 0; index < agent.getNrSlots; index++)
             {
                 if (agent.getRewards[index] == highestEstimate)
@@ -55,13 +62,12 @@ namespace RLMAL
                 }
             }
 
-            //choose a random action from the optimal actions. 
-            int actionIndex = random.Next(actionIndices.Count());
-            int action = actionIndices[actionIndex];
-            
-            return action;
+            // Choose a random action from the optimal actions. 
+            int actionIndex = actionIndices[random.Next(actionIndices.Count)];
+
+            return actionIndex;
         }
-        
+
         /// TO DO: EXERCISE 3
         /// The egreedy algorithm.
         /// RETURN      : The method should return an action index (this represents the machine id).
@@ -110,10 +116,17 @@ namespace RLMAL
             }
 
             actionIndex = getRandomIndexFromSelectionWheel(actionProbabilities, random);
-           
+
             return actionIndex;
         }
 
+        /// Get a random index from a list of probabilities per index.
+        /// The probabilities do not necessarily have to add up to 1 (automatic scaling is applied).
+        /// An index is chosen based on its probabilistic weight.
+        /// RETURN        : The method returns a random index. Returns -1 if no index can be found.
+        /// PARAMETERS
+        /// probabilities : list of probabilities per index
+        /// random        : this object can be used to generate random numbers
         public static int getRandomIndexFromSelectionWheel(double[] probabilities, Random random)
         {
             double universalProbability = probabilities.Sum(probability => probability);
@@ -131,8 +144,5 @@ namespace RLMAL
             // Default to -1, but this should never happen.
             return -1;
         }
-
-
-
     }
 }
